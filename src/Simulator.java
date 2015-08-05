@@ -44,7 +44,7 @@ public class Simulator {
         addEvent(firstEvent);
     }
 
-    public void run() {
+    public double run() {
 
         double area = 0;
         double lastNumberOfClients = 0;
@@ -58,7 +58,7 @@ public class Simulator {
                 case entry:
                     numberOfClients++;
 
-                    System.out.println("Entrou, N=" + numberOfClients);
+//                    System.out.println("Entrou, N=" + numberOfClients);
 
                     double newEntryTime = currentEvent.getTime() + entryDistribution.nextNumber();
                     Event newEntryEvent = new Event(newEntryTime, Event.EventType.entry);
@@ -112,9 +112,10 @@ public class Simulator {
             lastNumberOfClients = numberOfClients;
         }
 
-        System.out.println("The simulation ended after " + lastEventTime);
-        System.out.println("The average numbers of clients was " + area/lastEventTime);
-
+        double meanNumberOfClients = area/lastEventTime;
+//        System.out.println("The simulation ended after " + lastEventTime);
+//        System.out.println("The average numbers of clients was " + meanNumberOfClients);
+        return meanNumberOfClients;
     }
 
     private void addEvent(Event event) {
