@@ -24,6 +24,8 @@ public class Simulator {
     private Random random = new Random(System.currentTimeMillis());
 
 
+
+
     public Simulator(double mu, double lambda, double reentryProbability) {
         this.mu = mu;
         this.lambda = lambda;
@@ -45,7 +47,8 @@ public class Simulator {
     }
 
     public void run() {
-        while (!events.isEmpty()) {
+        boolean timeOut= false;
+        while (!events.isEmpty() && !timeOut) {
             Event currentEvent = events.remove(0);
 
             switch (currentEvent.getType()) {
@@ -56,26 +59,47 @@ public class Simulator {
                     Event newEntryEvent = new Event(newEntryTime, entry);
                     addEvent(newEntryEvent);
 
+                    if(newEntryTime>TIME_LIMIT){
+                        timeOut=true;
+                    }
+
                     if(numberOfClients == 1) {
                         double newExitTime = currentEvent.getTime() + exitDistribution.nextNumber();
                         Event newExitEvent = new Event(newExitTime, exit);
                         addEvent(newExitEvent);
+
+                        if(newExitTime>TIME_LIMIT){
+                            timeOut=true;
+                        }
                     }
 
                     break;
                 case exit:
 
-                    if(random.nextDouble() < reentryProbability) {
-                        //TODO: do we need an entry event
-                    }
-                    else {
-                        numberOfClients--;
-                    }
-                    
-                    double newExitTime = currentEvent.getTime() + exitDistribution.nextNumber();
-                    Event newExitEvent = new Event(newExitTime, exit);
-                    addEvent(newExitEvent);
+                    numberOfClients--;
 
+                    if(random.nextDouble() < reentryProbability) {
+                        //TODO: do we need an entry event: YES
+
+                        double newReentryTime = currentEvent.getTime() + entryDistribution.nextNumber();
+                        Event newReentryEvent = new Event(newReentryTime, entry);
+                        addEvent(newReentryEvent);
+
+                        if(newReentryTime>TIME_LIMIT){
+                            timeOut=true;
+                        }
+
+                    }
+
+                    if(numberOfClients>0) {
+                        double newExitTime = currentEvent.getTime() + exitDistribution.nextNumber();
+                        Event newExitEvent = new Event(newExitTime, exit);
+                        addEvent(newExitEvent);
+
+                        if(newExitTime>TIME_LIMIT){
+                            timeOut=true;
+                        }
+                    }
                     break;
             }
         }

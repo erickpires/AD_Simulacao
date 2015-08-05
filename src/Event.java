@@ -3,6 +3,14 @@
  */
 public class Event implements Comparable<Event> {
 
+    public EventType getType() {
+        return type;
+    }
+
+    public double getTime() {
+        return time;
+    }
+
     public enum EventType {
         entry,
         exit
@@ -14,14 +22,6 @@ public class Event implements Comparable<Event> {
     public Event(double time, EventType type) {
         this.time = time;
         this.type = type;
-    }
-
-    public EventType getType() {
-        return type;
-    }
-
-    public double getTime() {
-        return time;
     }
 
     @Override
