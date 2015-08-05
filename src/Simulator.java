@@ -3,13 +3,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import static Event.EventType.*;
-
 /**
  * Created by erickpires on 05/08/15.
  */
 public class Simulator {
-    private static final double TIME_LIMIT = 1000;
+    private static final double TIME_LIMIT = 10000;
 
     private double mu; // Service rate
     private double lambda; // Arrival rate
@@ -26,7 +24,7 @@ public class Simulator {
 
 
 
-    public Simulator(double mu, double lambda, double reentryProbability) {
+    public Simulator(double lambda, double mu, double reentryProbability) {
         this.mu = mu;
         this.lambda = lambda;
         this.reentryProbability = reentryProbability;
@@ -39,7 +37,7 @@ public class Simulator {
         entryDistribution = new ExpDistribution(lambda);
         exitDistribution = new ExpDistribution(mu);
 
-        Event firstEvent = new Event(entryDistribution.nextNumber(), entry);
+        Event firstEvent = new Event(entryDistribution.nextNumber(), Event.EventType.entry);
 
         numberOfClients = 0;
 
@@ -60,8 +58,10 @@ public class Simulator {
                 case entry:
                     numberOfClients++;
 
+                    System.out.println("Entrou, N=" + numberOfClients);
+
                     double newEntryTime = currentEvent.getTime() + entryDistribution.nextNumber();
-                    Event newEntryEvent = new Event(newEntryTime, entry);
+                    Event newEntryEvent = new Event(newEntryTime, Event.EventType.entry);
                     addEvent(newEntryEvent);
 
                     if(newEntryTime>TIME_LIMIT){
@@ -70,7 +70,7 @@ public class Simulator {
 
                     if(numberOfClients == 1) {
                         double newExitTime = currentEvent.getTime() + exitDistribution.nextNumber();
-                        Event newExitEvent = new Event(newExitTime, exit);
+                        Event newExitEvent = new Event(newExitTime, Event.EventType.exit);
                         addEvent(newExitEvent);
 
                         if(newExitTime>TIME_LIMIT){
@@ -86,7 +86,7 @@ public class Simulator {
                     if(random.nextDouble() < reentryProbability) {
 
                         double newReentryTime = currentEvent.getTime() + entryDistribution.nextNumber();
-                        Event newReentryEvent = new Event(newReentryTime, entry);
+                        Event newReentryEvent = new Event(newReentryTime, Event.EventType.entry);
                         addEvent(newReentryEvent);
 
                         if(newReentryTime>TIME_LIMIT){
@@ -97,7 +97,7 @@ public class Simulator {
 
                     if(numberOfClients>0) {
                         double newExitTime = currentEvent.getTime() + exitDistribution.nextNumber();
-                        Event newExitEvent = new Event(newExitTime, exit);
+                        Event newExitEvent = new Event(newExitTime, Event.EventType.exit);
                         addEvent(newExitEvent);
 
                         if(newExitTime>TIME_LIMIT){
@@ -111,6 +111,10 @@ public class Simulator {
             lastEventTime = currentEvent.getTime();
             lastNumberOfClients = numberOfClients;
         }
+
+        System.out.println("The simulation ended after " + lastEventTime);
+        System.out.println("The average numbers of clients was " + area/lastEventTime);
+
     }
 
     private void addEvent(Event event) {
