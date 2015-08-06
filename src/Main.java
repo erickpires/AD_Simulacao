@@ -11,7 +11,7 @@ public class Main {
         double[] values = new double[NUMBER_OF_ITERARTIONS];
 
         for (int i = 0; i < NUMBER_OF_ITERARTIONS; i++) {
-            Simulator simulator = new Simulator(0.8, 1.0, 0.0);
+            Simulator simulator = new Simulator(0.01, 1.0, 0.9);
             values[i] = simulator.run();
             meanSum += values[i];
         }
@@ -35,7 +35,13 @@ public class Main {
         System.out.println("Confidence Interval is: [" + lowerConfidenceIntervalPoint + " : " + upperConfidenceIntervalPoint + "]");
 
         //System.out.println("Mean value of number of clients " + meanValueEstimator);
-    }
+
+//        Simulator simulator = new Simulator(0.01, 1.0, 0.9);
+//        System.out.println(simulator.run());
+      }
+
+
+
 
     private static double sqr(double value) {
         return value * value;

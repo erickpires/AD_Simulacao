@@ -7,7 +7,7 @@ import java.util.Random;
  * Created by erickpires on 05/08/15.
  */
 public class Simulator {
-    private static final double TIME_LIMIT = 10000;
+    private static final double TIME_LIMIT = 4000;
 
     private double mu; // Service rate
     private double lambda; // Arrival rate
@@ -51,8 +51,12 @@ public class Simulator {
         double lastEventTime = 0;
         boolean timeOut= false;
 
-        while (!events.isEmpty() && !timeOut) {
+        while (!events.isEmpty()) {
             Event currentEvent = events.remove(0);
+
+            if(currentEvent.getTime()>TIME_LIMIT) {
+                break;
+            }
 
             switch (currentEvent.getType()) {
                 case entry:
@@ -64,21 +68,16 @@ public class Simulator {
                     Event newEntryEvent = new Event(newEntryTime, Event.EventType.entry);
                     addEvent(newEntryEvent);
 
-                    if(newEntryTime>TIME_LIMIT){
-                        timeOut=true;
-                    }
-
                     if(numberOfClients == 1) {
+
                         double newExitTime = currentEvent.getTime() + exitDistribution.nextNumber();
                         Event newExitEvent = new Event(newExitTime, Event.EventType.exit);
                         addEvent(newExitEvent);
 
-                        if(newExitTime>TIME_LIMIT){
-                            timeOut=true;
-                        }
                     }
 
                     break;
+
                 case exit:
 
                     numberOfClients--;
@@ -89,20 +88,14 @@ public class Simulator {
                         Event newReentryEvent = new Event(newReentryTime, Event.EventType.entry);
                         addEvent(newReentryEvent);
 
-                        if(newReentryTime>TIME_LIMIT){
-                            timeOut=true;
-                        }
-
                     }
 
                     if(numberOfClients>0) {
+
                         double newExitTime = currentEvent.getTime() + exitDistribution.nextNumber();
                         Event newExitEvent = new Event(newExitTime, Event.EventType.exit);
                         addEvent(newExitEvent);
 
-                        if(newExitTime>TIME_LIMIT){
-                            timeOut=true;
-                        }
                     }
                     break;
             }
@@ -113,7 +106,7 @@ public class Simulator {
         }
 
         double meanNumberOfClients = area/lastEventTime;
-//        System.out.println("The simulation ended after " + lastEventTime);
+        System.out.println("The simulation ended after " + lastEventTime);
 //        System.out.println("The average numbers of clients was " + meanNumberOfClients);
         return meanNumberOfClients;
     }
