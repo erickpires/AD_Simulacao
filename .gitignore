@@ -30,7 +30,7 @@
 
 # IntelliJ
 
-/out/
+/out/production/
 
 # mpeltonen/sbt-idea plugin
 

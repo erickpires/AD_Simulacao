@@ -3,4 +3,10 @@
  */
 public interface Distribution {
     double nextNumber();
+
+    enum DistributionType {
+        exponential,
+        uniform,
+        deterministic
+    }
 }

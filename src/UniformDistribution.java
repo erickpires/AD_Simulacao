@@ -18,6 +18,11 @@ public class UniformDistribution implements Distribution {
         random = new Random(System.currentTimeMillis());
     }
 
+    public UniformDistribution(double meanValue) {
+        this.lowerBound = 0.0;
+        this.upperBound = 1.0 / meanValue;
+    }
+
     @Override
     public double nextNumber() {
         double uniform = random.nextDouble();

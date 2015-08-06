@@ -9,8 +9,6 @@ import java.util.Random;
 public class Simulator {
     private static final double TIME_LIMIT = 10000;
 
-    private double mu; // Service rate
-    private double lambda; // Arrival rate
     private double reentryProbability;
 
     private Distribution entryDistribution;
@@ -21,31 +19,22 @@ public class Simulator {
     private List<Event> events  = new ArrayList<Event>();
     private Random random = new Random(System.currentTimeMillis());
 
-
-
-
-    public Simulator(double lambda, double mu, double reentryProbability) {
-        this.mu = mu;
-        this.lambda = lambda;
+    public Simulator(Distribution entryDistribution, Distribution exitDistribution, double reentryProbability) {
+        this.entryDistribution = entryDistribution;
+        this.exitDistribution = exitDistribution;
         this.reentryProbability = reentryProbability;
 
         init();
     }
 
     private void init() {
-
-        entryDistribution = new ExpDistribution(lambda);
-        exitDistribution = new ExpDistribution(mu);
-
         Event firstEvent = new Event(entryDistribution.nextNumber(), Event.EventType.entry);
-
         numberOfClients = 0;
 
         addEvent(firstEvent);
     }
 
     public double run() {
-
         double area = 0;
         double lastNumberOfClients = 0;
         double lastEventTime = 0;
@@ -60,7 +49,6 @@ public class Simulator {
             switch (currentEvent.getType()) {
                 case entry:
                     numberOfClients++;
-
 //                    System.out.println("Entrou, N=" + numberOfClients);
 
                     double newEntryTime = currentEvent.getTime() + entryDistribution.nextNumber();
@@ -99,7 +87,7 @@ public class Simulator {
         }
 
         double meanNumberOfClients = area/lastEventTime;
-        System.out.println("The simulation ended after " + lastEventTime);
+//        System.out.println("The simulation ended after " + lastEventTime);
 //        System.out.println("The average numbers of clients was " + meanNumberOfClients);
         return meanNumberOfClients;
     }
