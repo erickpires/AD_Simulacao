@@ -4,24 +4,19 @@
  */
 public class AnalyticSolution {
 
-    public double lambda, mu,p,N,rho;
+    public double N,rho;
 
-    public AnalyticSolution(double lambda,double mu, double p) {
-
-        this.lambda = lambda;
-        this.mu = mu;
-        this.p = p;
-
+    public AnalyticSolution() {
 
     }
 
-    public double getMeanNumber() {
+    public double getMeanNumber(double lambda,double mu, double p) {
         rho = lambda / ( mu * ( 1-p ));
 
         N = rho / (1 - rho);
 
         return N;
     }
-    
+
 
 }
