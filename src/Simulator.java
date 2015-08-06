@@ -7,7 +7,7 @@ import java.util.Random;
  * Created by erickpires on 05/08/15.
  */
 public class Simulator {
-    private static final double TIME_LIMIT = 10000;
+    private static final double TIME_LIMIT = 100000;
 
     private double mu; // Service rate
     private double lambda; // Arrival rate
@@ -62,7 +62,7 @@ public class Simulator {
                 case entry:
                     numberOfClients++;
 
-//                    System.out.println("Entrou, N=" + numberOfClients);
+                    System.out.println("Entrou, N=" + numberOfClients);
 
                     double newEntryTime = currentEvent.getTime() + entryDistribution.nextNumber();
                     Event newEntryEvent = new Event(newEntryTime, Event.EventType.entry);
@@ -80,17 +80,15 @@ public class Simulator {
 
                 case exit:
 
-                    if(!(random.nextDouble() < reentryProbability)) {
-                        numberOfClients--;
-                    }
+                    numberOfClients--;
 
-//                    if(random.nextDouble() < reentryProbability) {
-//
-//                        double newReentryTime = currentEvent.getTime() + entryDistribution.nextNumber();
-//                        Event newReentryEvent = new Event(newReentryTime, Event.EventType.entry);
-//                        addEvent(newReentryEvent);
-//
-//                    }
+                    if(random.nextDouble() < reentryProbability) {
+
+                        double newReentryTime = currentEvent.getTime();
+                        Event newReentryEvent = new Event(newReentryTime, Event.EventType.entry);
+                        addEvent(newReentryEvent);
+
+                    }
 
                     if(numberOfClients>0) {
 
