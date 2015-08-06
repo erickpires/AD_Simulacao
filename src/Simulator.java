@@ -49,7 +49,6 @@ public class Simulator {
         double area = 0;
         double lastNumberOfClients = 0;
         double lastEventTime = 0;
-        boolean timeOut= false;
 
         while (!events.isEmpty()) {
             Event currentEvent = events.remove(0);
@@ -83,14 +82,6 @@ public class Simulator {
                     if(!(random.nextDouble() < reentryProbability)) {
                         numberOfClients--;
                     }
-
-//                    if(random.nextDouble() < reentryProbability) {
-//
-//                        double newReentryTime = currentEvent.getTime() + entryDistribution.nextNumber();
-//                        Event newReentryEvent = new Event(newReentryTime, Event.EventType.entry);
-//                        addEvent(newReentryEvent);
-//
-//                    }
 
                     if(numberOfClients>0) {
 
