@@ -12,31 +12,31 @@ public class Main {
     public static void main(String[] args) {
         //Scenery 1
         System.out.println("Scenery 1");
-        varyLambda(Distribution.DistributionType.exponential, 0.0, 1.0, "out/scenery1.out");
+        varyLambda(Distribution.DistributionType.exponential, 0.0, 1.0, "scenery1.csv");
 
         //Scenery 2
         System.out.println("\nScenery 2");
-        varyLambda(Distribution.DistributionType.deterministic, 0.0, 1.0, "out/scenery2.out");
+        varyLambda(Distribution.DistributionType.deterministic, 0.0, 1.0, "scenery2.csv");
 
         //Scenery 3
         System.out.println("\nScenery 3");
         Distribution sceneryThreeEntryDistribution = new UniformDistribution(5.0, 15.0);
-        varyMu(sceneryThreeEntryDistribution, 0.0, "out/scenery3.out");
+        varyMu(sceneryThreeEntryDistribution, 0.0, "scenery3.csv");
 
         //Scenery 4
         System.out.println("\nScenery 4");
         Distribution sceneryFourEntryDistribution = new ExpDistribution(0.01);
-        varyMu(sceneryFourEntryDistribution, 0.9, "out/scenery4.out");
+        varyMu(sceneryFourEntryDistribution, 0.9, "scenery4.csv");
 
         //Scenery 5
         System.out.println("\nScenery 5");
         Distribution sceneryFiveEntryDistribution = new DeterministicDistribution(0.01);
-        varyMu(sceneryFiveEntryDistribution, 0.9, "out/scenery5.out");
+        varyMu(sceneryFiveEntryDistribution, 0.9, "scenery5.csv");
 
         //Scenery 6
         System.out.println("\nScenery 6");
         Distribution scenerySixEntryDistribution = new UniformDistribution(50.0, 150.0);
-        varyMu(scenerySixEntryDistribution, 0.9, "out/scenery6.out");
+        varyMu(scenerySixEntryDistribution, 0.9, "scenery6.csv");
     }
 
     private static void varyLambda(Distribution.DistributionType type, double reentryProbability,
@@ -60,7 +60,7 @@ public class Main {
                         break;
                 }
 
-                out.print(lambda + " | ");
+                out.print(lambda + ",");
                 simulate(entryDistribution, exitDistribution, reentryProbability, out);
             }
         }catch (Exception e) {}
@@ -72,7 +72,7 @@ public class Main {
             for (double mu = 1.0; mu <= 10.0; mu += 0.5) {
                 Distribution exitDistribution = new ExpDistribution(mu);
 
-                out.print(mu + " | ");
+                out.print(mu + ",");
                 simulate(entryDistribution, exitDistribution, reentryProbability, out);
             }
 
@@ -102,17 +102,16 @@ public class Main {
         double varianceValueEstimator = diffToMeanSum / (NUMBER_OF_ITERARTIONS - 1);
         double standardDeviation = Math.sqrt(varianceValueEstimator);
 
-        double tmp = Z * (standardDeviation / Math.sqrt(NUMBER_OF_ITERARTIONS));
+        double error = Z * (standardDeviation / Math.sqrt(NUMBER_OF_ITERARTIONS));
 
-        double lowerConfidenceIntervalPoint = meanValueEstimator - tmp;
-        double upperConfidenceIntervalPoint = meanValueEstimator + tmp;
+        double lowerConfidenceIntervalPoint = meanValueEstimator - error;
+        double upperConfidenceIntervalPoint = meanValueEstimator + error;
 
         System.out.println("Mean Estimator: " + meanValueEstimator);
         System.out.println("Standard deviation: " + standardDeviation);
         System.out.println("Confidence Interval is: [" + lowerConfidenceIntervalPoint + " : " + upperConfidenceIntervalPoint + "]");
 
-        out.print(meanValueEstimator + " | ");
-        out.println("[" + lowerConfidenceIntervalPoint + " : " + upperConfidenceIntervalPoint + "]");
+        out.print(meanValueEstimator + "," +  error + "\n");
     }
 
     private static double sqr(double value) {
