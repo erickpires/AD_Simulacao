@@ -3,14 +3,14 @@
  */
 public class DeterministicDistribution implements Distribution {
 
-    private double value;
+    private double rate;
 
-    public DeterministicDistribution(double value) {
-        this.value = value;
+    public DeterministicDistribution(double rate) {
+        this.rate = rate;
     }
 
     @Override
     public double nextNumber() {
-        return value;
+        return 1.0 / rate;
     }
 }
