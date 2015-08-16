@@ -3,6 +3,7 @@ import java.io.PrintStream;
 
 /**
  * Created by erickpires on 05/08/15.
+ *
  */
 public class Main {
 
@@ -63,7 +64,7 @@ public class Main {
                 out.print(lambda + ",");
                 simulate(entryDistribution, exitDistribution, reentryProbability, out);
             }
-        }catch (Exception e) {}
+        }catch (Exception ignored) {}
     }
 
     private static void varyMu(Distribution entryDistribution, double reentryProbability, String outputFileName) {
@@ -77,7 +78,7 @@ public class Main {
             }
 
             out.close();
-        }catch (Exception e){}
+        }catch (Exception ignored){}
     }
 
     private static void simulate(Distribution entryDistribution, Distribution exitDistribution,
