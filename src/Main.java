@@ -41,7 +41,7 @@ public class Main {
     }
 
     private static void varyLambda(Distribution.DistributionType type, double reentryProbability,
-                                   double mu, String outputFileName) {
+                                   double mu, String outputFileName){
         try {
             PrintStream out = new PrintStream(new FileOutputStream(outputFileName));
 

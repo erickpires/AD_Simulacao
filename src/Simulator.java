@@ -157,7 +157,7 @@ public class Simulator {
         return sumTimes/numberOfExits;
     }
 
-    public double meanExogenExitTimes() {// For 4.2
+    public double meanExogenExitTime() {// For 4.2
         double area = 0;
         double lastNumberOfClients = 0;
         double lastEventTime = 0;
