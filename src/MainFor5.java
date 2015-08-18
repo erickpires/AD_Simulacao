@@ -25,10 +25,6 @@ public class MainFor5 {
             varyMuSimulateSpaguettiTimeEmptyExits(sceneryFourEntryDistribution, 0.9, "5dot3-TotalTime.csv");
             varyMuSimulateSpaguettiSeeEmptyExits(sceneryFourEntryDistribution, 0.9, "5dot3-SeeTime.csv");
 
-
-
-
-
         }
 
 
@@ -44,7 +40,7 @@ public class MainFor5 {
 
             Distribution exitDistribution = new ExpDistribution(mu);
 
-            for (double lambda = 0.05; lambda <= 0.9; lambda += 0.05) {
+            for (double lambda = 0.05; lambda <= 0.9001; lambda += 0.05) {
                 Distribution entryDistribution = null;
                 switch (type) {
                     case exponential:
@@ -72,7 +68,7 @@ public class MainFor5 {
 
             Distribution exitDistribution = new ExpDistribution(mu);
 
-            for (double lambda = 0.05; lambda <= 0.9; lambda += 0.05) {
+            for (double lambda = 0.05; lambda <= 0.9001; lambda += 0.05) {
                 Distribution entryDistribution = null;
                 switch (type) {
                     case exponential:
@@ -293,10 +289,6 @@ public class MainFor5 {
 
         out.print(meanValueEstimator + "," +  error + "\n");
     }
-
-
-
-
 
         private static double sqr(double value) {
             return value * value;

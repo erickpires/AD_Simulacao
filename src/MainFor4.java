@@ -48,7 +48,7 @@ public class MainFor4 {
 
             Distribution exitDistribution = new ExpDistribution(mu);
 
-            for (double lambda = 0.05; lambda <= 0.9; lambda += 0.05) {
+            for (double lambda = 0.05; lambda <= 0.9001; lambda += 0.05) {
                 Distribution entryDistribution = null;
                 switch (type) {
                     case exponential:
