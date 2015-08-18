@@ -304,7 +304,7 @@ public class Simulator {
         return sumTimes/numberOfEntries;
     }
 
-    public double spaghetti() {// For 5.1 and 5.2
+    public double spaghettiTimeEmpty() {// For 5.1 and 5.2
         double area = 0;
         double lastNumberOfClients = 0;
         double lastEventTime = 0;
@@ -387,16 +387,103 @@ public class Simulator {
         }
 
         double emptyRelativeTime = emptyTotalTime/lastEventTime;
-        double relativeSeeEmpty = seeEmpty/lifetimeClients;
 
-        System.out.println("The time the system spent empty was " + emptyRelativeTime + "of the total time");
-        System.out.println("The number of entries that saw the system empty was" + relativeSeeEmpty + "of the number of entries");
+ //       System.out.println("The time the system spent empty was " + emptyRelativeTime + "of the total time");
 
-        return Math.abs(emptyRelativeTime - relativeSeeEmpty);
+        return emptyRelativeTime;
 
     }
 
-    public double spaghettiExits() {// For 5.3
+    public double spaghettiSeeEmpty() {// For 5.1 and 5.2
+        double area = 0;
+        double lastNumberOfClients = 0;
+        double lastEventTime = 0;
+        double emptyTotalTime = 0;
+        double emptyStart = 0;
+        int wasItEmptyLastTime = 0;
+        double seeEmpty = 0;
+        double lifetimeClients = 0;
+
+        while (!events.isEmpty()) {
+            Event currentEvent = events.remove(0);
+
+            if (currentEvent.getTime() > TIME_LIMIT) {
+                break;
+            }
+
+            switch (currentEvent.getType()) {
+                case entry:
+
+                    //This is for the fraction of the clients that see the system empty
+
+                    lifetimeClients++;
+
+                    if (numberOfClients == 0) {
+
+                        seeEmpty++;
+                    }
+
+                    numberOfClients++;
+//                    System.out.println("Entrou, N=" + numberOfClients);
+
+                    double newEntryTime = currentEvent.getTime() + entryDistribution.nextNumber();
+                    Event newEntryEvent = new Event(newEntryTime, Event.EventType.entry);
+                    addEvent(newEntryEvent);
+
+                    if (numberOfClients == 1) {
+
+                        double newExitTime = currentEvent.getTime() + exitDistribution.nextNumber();
+                        Event newExitEvent = new Event(newExitTime, Event.EventType.exit);
+                        addEvent(newExitEvent);
+
+                    }
+
+                    break;
+
+                case exit:
+
+                    if (!(random.nextDouble() < reentryProbability)) {
+                        numberOfClients--;
+                    }
+
+                    if (numberOfClients > 0) {
+
+                        double newExitTime = currentEvent.getTime() + exitDistribution.nextNumber();
+                        Event newExitEvent = new Event(newExitTime, Event.EventType.exit);
+                        addEvent(newExitEvent);
+
+                    }
+                    break;
+            }
+
+            // This is for the empty time
+
+            if (numberOfClients == 0) {
+                emptyStart = currentEvent.getTime();
+                wasItEmptyLastTime = 1;
+            } else if (wasItEmptyLastTime == 1) {
+                emptyTotalTime += emptyStart + currentEvent.getTime();
+                emptyStart = 0;
+                wasItEmptyLastTime = 0;
+            }
+
+
+            area += lastNumberOfClients * (currentEvent.getTime() - lastEventTime);
+            lastEventTime = currentEvent.getTime();
+            lastNumberOfClients = numberOfClients;
+
+
+        }
+
+
+        double relativeSeeEmpty = seeEmpty / lifetimeClients;
+
+        //       System.out.println("The number of entries that saw the system empty was" + relativeSeeEmpty + "of the number of entries");
+
+        return relativeSeeEmpty;
+
+    }
+    public double spaghettiTotalTimeExits() {// For 5.3
         double area = 0;
         double lastNumberOfClients = 0;
         double lastEventTime = 0;
@@ -480,14 +567,106 @@ public class Simulator {
         }
 
         double emptyRelativeTime = emptyTotalTime/lastEventTime;
-        double relativeSeeEmpty = seeEmpty/lifetimeExits;
 
-        System.out.println("The time the system spent empty was " + emptyRelativeTime + "of the total time");
-        System.out.println("The number of entries that saw the system empty was" + relativeSeeEmpty + "of the number of entries");
+ //       System.out.println("The time the system spent empty was " + emptyRelativeTime + "of the total time");
 
-        return Math.abs(emptyRelativeTime - relativeSeeEmpty);
+
+        return emptyRelativeTime;
 
     }
+
+    public double spaghettiSeeEmptyExits() {// For 5.3
+        double area = 0;
+        double lastNumberOfClients = 0;
+        double lastEventTime = 0;
+        double emptyTotalTime = 0;
+        double emptyStart = 0;
+        int wasItEmptyLastTime = 0;
+        double seeEmpty = 0;
+        double lifetimeExits = 0;
+
+        while (!events.isEmpty()) {
+            Event currentEvent = events.remove(0);
+
+            if(currentEvent.getTime()>TIME_LIMIT) {
+                break;
+            }
+
+            switch (currentEvent.getType()) {
+                case entry:
+
+                    numberOfClients++;
+//                    System.out.println("Entrou, N=" + numberOfClients);
+
+                    double newEntryTime = currentEvent.getTime() + entryDistribution.nextNumber();
+                    Event newEntryEvent = new Event(newEntryTime, Event.EventType.entry);
+                    addEvent(newEntryEvent);
+
+                    if(numberOfClients == 1) {
+
+                        double newExitTime = currentEvent.getTime() + exitDistribution.nextNumber();
+                        Event newExitEvent = new Event(newExitTime, Event.EventType.exit);
+                        addEvent(newExitEvent);
+
+                    }
+
+                    break;
+
+                case exit:
+
+                    if(!(random.nextDouble() < reentryProbability)) {
+                        numberOfClients--;
+
+                        lifetimeExits++;
+
+                        if(numberOfClients == 0) {
+
+                            seeEmpty++;
+                        }
+
+
+
+                    }
+
+                    if(numberOfClients>0) {
+
+                        double newExitTime = currentEvent.getTime() + exitDistribution.nextNumber();
+                        Event newExitEvent = new Event(newExitTime, Event.EventType.exit);
+                        addEvent(newExitEvent);
+
+                    }
+                    break;
+            }
+
+            // This is for the empty time
+
+            if (numberOfClients == 0) {
+                emptyStart = currentEvent.getTime();
+                wasItEmptyLastTime = 1;
+            }
+            else if(wasItEmptyLastTime == 1){
+                emptyTotalTime+= emptyStart + currentEvent.getTime();
+                emptyStart = 0;
+                wasItEmptyLastTime = 0;
+            }
+
+
+            area += lastNumberOfClients*(currentEvent.getTime()-lastEventTime);
+            lastEventTime = currentEvent.getTime();
+            lastNumberOfClients = numberOfClients;
+
+
+        }
+
+
+        double relativeSeeEmpty = seeEmpty/lifetimeExits;
+
+ //       System.out.println("The number of entries that saw the system empty was" + relativeSeeEmpty + "of the number of entries");
+
+        return relativeSeeEmpty;
+
+    }
+
 
     private void addEvent(Event event) {
         events.add(event);

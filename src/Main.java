@@ -5,9 +5,9 @@ import java.io.PrintStream;
  * Created by erickpires on 05/08/15.
  *
  */
-public class Main {
+ public class Main {
 
-    private static final int NUMBER_OF_ITERARTIONS = 30;
+    private static final int NUMBER_OF_ITERATIONS = 30;
     private static final double Z = 1.96;
 
     public static void main(String[] args) {
@@ -85,25 +85,25 @@ public class Main {
                                  double reentryProbability, PrintStream out) {
 
         double meanSum = 0.0;
-        double[] values = new double[NUMBER_OF_ITERARTIONS];
+        double[] values = new double[NUMBER_OF_ITERATIONS];
 
-        for (int i = 0; i < NUMBER_OF_ITERARTIONS; i++) {
+        for (int i = 0; i < NUMBER_OF_ITERATIONS; i++) {
             Simulator simulator = new Simulator(entryDistribution, exitDistribution, reentryProbability);
             values[i] = simulator.run();
             meanSum += values[i];
         }
 
-        double meanValueEstimator = meanSum / NUMBER_OF_ITERARTIONS;
+        double meanValueEstimator = meanSum / NUMBER_OF_ITERATIONS;
 
         double diffToMeanSum = 0.0;
-        for (int i = 0; i < NUMBER_OF_ITERARTIONS; i++) {
+        for (int i = 0; i < NUMBER_OF_ITERATIONS; i++) {
             diffToMeanSum += sqr(values[i] - meanValueEstimator);
         }
 
-        double varianceValueEstimator = diffToMeanSum / (NUMBER_OF_ITERARTIONS - 1);
+        double varianceValueEstimator = diffToMeanSum / (NUMBER_OF_ITERATIONS - 1);
         double standardDeviation = Math.sqrt(varianceValueEstimator);
 
-        double error = Z * (standardDeviation / Math.sqrt(NUMBER_OF_ITERARTIONS));
+        double error = Z * (standardDeviation / Math.sqrt(NUMBER_OF_ITERATIONS));
 
         double lowerConfidenceIntervalPoint = meanValueEstimator - error;
         double upperConfidenceIntervalPoint = meanValueEstimator + error;
