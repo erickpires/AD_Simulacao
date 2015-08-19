@@ -1,3 +1,5 @@
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -17,6 +19,7 @@ public class Simulator {
     private int numberOfClients;
 
     private List<Event> events  = new ArrayList<Event>();
+    private List<EventR> eventsR  = new ArrayList<EventR>();
     private Random random = new Random(System.currentTimeMillis());
 
     public Simulator(Distribution entryDistribution, Distribution exitDistribution, double reentryProbability) {
@@ -32,6 +35,12 @@ public class Simulator {
         numberOfClients = 0;
 
         addEvent(firstEvent);
+
+        EventR firstEventR = new EventR(entryDistribution.nextNumber(), EventR.EventType.entry);
+        numberOfClients = 0;
+
+        addEventR(firstEventR);
+
     }
 
     public double run() {
@@ -91,6 +100,225 @@ public class Simulator {
 //        System.out.println("The average numbers of clients was " + meanNumberOfClients);
         return meanNumberOfClients;
     }
+
+    public void samplesExitTime(){
+        try {
+            PrintStream out = new PrintStream(new FileOutputStream("samplesExitTime.csv"));
+            double lastNumberOfClients = 0;
+            double lastEventExitTime = 0;
+            double timeSinceLastExit = 0;
+          //  List<double> answer;
+
+        while (!events.isEmpty()) {
+            Event currentEvent = events.remove(0);
+
+            if(currentEvent.getTime()>TIME_LIMIT) {
+                break;
+            }
+
+            switch (currentEvent.getType()) {
+                case entry:
+                    numberOfClients++;
+//                    System.out.println("Entrou, N=" + numberOfClients);
+
+                    double newEntryTime = currentEvent.getTime() + entryDistribution.nextNumber();
+                    Event newEntryEvent = new Event(newEntryTime, Event.EventType.entry);
+                    addEvent(newEntryEvent);
+
+                    if(numberOfClients == 1) {
+
+                        double newExitTime = currentEvent.getTime() + exitDistribution.nextNumber();
+                        Event newExitEvent = new Event(newExitTime, Event.EventType.exit);
+                        addEvent(newExitEvent);
+
+                    }
+
+                    break;
+
+                case exit:
+
+                    timeSinceLastExit = currentEvent.getTime() - lastEventExitTime;
+
+                    out.print(timeSinceLastExit + ",\n");
+
+
+                    if(!(random.nextDouble() < reentryProbability)) {
+                        numberOfClients--;
+                    }
+
+                    if(numberOfClients>0) {
+
+                        double newExitTime = currentEvent.getTime() + exitDistribution.nextNumber();
+                        Event newExitEvent = new Event(newExitTime, Event.EventType.exit);
+                        addEvent(newExitEvent);
+
+                    }
+
+                    lastEventExitTime = currentEvent.getTime();
+                    break;
+            }
+
+        }
+
+
+        }catch (Exception ignored) {}
+    }
+
+    public void samplesExogenExits(){
+        try {
+            PrintStream out = new PrintStream(new FileOutputStream("samplesExogenExits.csv"));
+            double lastNumberOfClients = 0;
+            double lastEventTime = 0;
+            double lastEventExitTime = 0;
+            double timeSinceLastExit = 0;
+
+            while (!events.isEmpty()) {
+                Event currentEvent = events.remove(0);
+
+                if(currentEvent.getTime()>TIME_LIMIT) {
+                    break;
+                }
+
+                switch (currentEvent.getType()) {
+                    case entry:
+                        numberOfClients++;
+//                    System.out.println("Entrou, N=" + numberOfClients);
+
+                        double newEntryTime = currentEvent.getTime() + entryDistribution.nextNumber();
+                        Event newEntryEvent = new Event(newEntryTime, Event.EventType.entry);
+                        addEvent(newEntryEvent);
+
+                        if(numberOfClients == 1) {
+
+                            double newExitTime = currentEvent.getTime() + exitDistribution.nextNumber();
+                            Event newExitEvent = new Event(newExitTime, Event.EventType.exit);
+                            addEvent(newExitEvent);
+
+                        }
+
+                        break;
+
+                    case exit:
+
+
+                        if(!(random.nextDouble() < reentryProbability)) {
+                            numberOfClients--;
+
+                            timeSinceLastExit = currentEvent.getTime() - lastEventExitTime;
+                            out.print(timeSinceLastExit + ",\n");
+
+                            lastEventExitTime = currentEvent.getTime();
+                        }
+
+                        if(numberOfClients>0) {
+
+                            double newExitTime = currentEvent.getTime() + exitDistribution.nextNumber();
+                            Event newExitEvent = new Event(newExitTime, Event.EventType.exit);
+                            addEvent(newExitEvent);
+
+                        }
+                        break;
+                }
+
+            }
+
+
+        }catch (Exception ignored) {}
+    }
+
+    public void sampleEntryTime() {// 4.4
+        try {
+            PrintStream out = new PrintStream(new FileOutputStream("samplesEntryTime.csv"));
+            double lastNumberOfClients = 0;
+            double lastEntryEventTime = 0;
+            double thisExistsToUseDistribution2Times = 0;
+            double timeSinceLastEntry = 0;
+
+            while (!eventsR.isEmpty()) {
+                EventR currentEvent = eventsR.remove(0);
+
+                if(currentEvent.getTime()>TIME_LIMIT) {
+                    break;
+                }
+
+                switch (currentEvent.getType()) {
+
+                    case entry:
+
+                        numberOfClients++;
+
+//                    System.out.println("Entrou, N=" + numberOfClients);
+
+                        timeSinceLastEntry = currentEvent.getTime() - lastEntryEventTime;
+
+                        out.print(timeSinceLastEntry + ",\n");
+
+                        double newEntryTime = currentEvent.getTime() + entryDistribution.nextNumber();
+                        EventR newEntryEvent = new EventR(newEntryTime, EventR.EventType.entry);
+                        addEventR(newEntryEvent);
+
+                        if(numberOfClients == 1) {
+
+                            double newExitTime = currentEvent.getTime() + exitDistribution.nextNumber();
+                            EventR newExitEvent = new EventR(newExitTime, EventR.EventType.exit);
+                            addEventR(newExitEvent);
+
+                        }
+
+                        lastEntryEventTime = currentEvent.getTime();
+
+                        break;
+
+                    case exit:
+
+                        numberOfClients--;
+
+                        if(random.nextDouble() < reentryProbability) {
+
+                            double newReEntryTime = currentEvent.getTime();
+                            EventR newReEntryEvent = new EventR(newReEntryTime, EventR.EventType.entry);
+                            addEventR(newReEntryEvent);
+                        }
+
+                        if(numberOfClients>0) {
+
+                            double newExitTime = currentEvent.getTime() + exitDistribution.nextNumber();
+                            EventR newExitEvent = new EventR(newExitTime, EventR.EventType.exit);
+                            addEventR(newExitEvent);
+
+                        }
+                        break;
+
+                    case reentry:
+
+                        numberOfClients++;
+
+                        timeSinceLastEntry = currentEvent.getTime() - lastEntryEventTime;
+
+                        out.print(timeSinceLastEntry + ",zn");
+
+                        if(numberOfClients == 1) {
+
+                            double newExitTime = currentEvent.getTime() + exitDistribution.nextNumber();
+                            EventR newExitEvent = new EventR(newExitTime, EventR.EventType.exit);
+                            addEventR(newExitEvent);
+
+                        }
+
+
+                        lastEntryEventTime = currentEvent.getTime();
+
+                        break;
+
+                }
+
+
+            }
+
+
+        }catch (Exception ignored) {}
+    }
+
 
     public double meanTotalExitTime() { // For 4.1 and 4.3
         double area = 0;
@@ -221,10 +449,6 @@ public class Simulator {
 
                         }
 
-
-
-
-
                     }
 
 
@@ -304,6 +528,7 @@ public class Simulator {
         return sumTimes/numberOfEntries;
     }
 
+
     public double spaghettiTimeEmpty() {// For 5.1 and 5.2
         double area = 0;
         double lastNumberOfClients = 0;
@@ -374,7 +599,7 @@ public class Simulator {
             }
             else
                 if (wasItEmptyLastTime == 1) {
-                emptyTotalTime += emptyStart + currentEvent.getTime();
+                emptyTotalTime += currentEvent.getTime() - emptyStart;// changed form (emptyTotalTime = emptyStart + currentEvent.getTime()), not yet tested
                 emptyStart = 0;
                 wasItEmptyLastTime = 0;
                 }
@@ -558,7 +783,7 @@ public class Simulator {
                 wasItEmptyLastTime = 1;
             }
             else if(wasItEmptyLastTime == 1){
-                emptyTotalTime+= emptyStart + currentEvent.getTime();
+                emptyTotalTime += currentEvent.getTime() - emptyStart;// changed form (emptyTotalTime = emptyStart + currentEvent.getTime()), not yet tested
                 emptyStart = 0;
                 wasItEmptyLastTime = 0;
             }
@@ -677,4 +902,15 @@ public class Simulator {
         events.add(event);
         Collections.sort(events);
     }
+
+    private void addEventR(EventR event) {
+        eventsR.add(event);
+        Collections.sort(eventsR);
+    }
+
+//    private void addAndSort(double answer, List){
+//
+//
+//    }
+
 }

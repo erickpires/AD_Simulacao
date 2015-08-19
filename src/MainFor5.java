@@ -15,15 +15,15 @@ public class MainFor5 {
             varyLambdaSimulateSpaguettiTimeEmpty(Distribution.DistributionType.exponential, 0.0, 1.0, "5dot1-TotalTime.csv");
             varyLambdaSimulateSpaguettiSeeEmpty(Distribution.DistributionType.exponential, 0.0, 1.0, "5dot1-SeeTime.csv");
 
-//            System.out.println("5.2\n");
-//            Distribution sceneryFourEntryDistribution = new ExpDistribution(0.01);
-//            varyMuSimulateSpaguettiTimeEmpty(sceneryFourEntryDistribution, 0.9, "5dot2-TotalTime.csv");
-//            varyMuSimulateSpaguettiSeeEmpty(sceneryFourEntryDistribution, 0.9, "5dot2-SeeTime.csv");
-//
-//            System.out.println("5.3\n");
-//            sceneryFourEntryDistribution = new ExpDistribution(0.01);
-//            varyMuSimulateSpaguettiTimeEmptyExits(sceneryFourEntryDistribution, 0.9, "5dot3-TotalTime.csv");
-//            varyMuSimulateSpaguettiSeeEmptyExits(sceneryFourEntryDistribution, 0.9, "5dot3-SeeTime.csv");
+            System.out.println("5.2\n");
+            Distribution sceneryFourEntryDistribution = new ExpDistribution(0.01);
+            varyMuSimulateSpaguettiTimeEmpty(sceneryFourEntryDistribution, 0.9, "5dot2-TotalTime.csv");
+            varyMuSimulateSpaguettiSeeEmpty(sceneryFourEntryDistribution, 0.9, "5dot2-SeeTime.csv");
+
+            System.out.println("5.3\n");
+            sceneryFourEntryDistribution = new ExpDistribution(0.01);
+            varyMuSimulateSpaguettiTimeEmptyExits(sceneryFourEntryDistribution, 0.9, "5dot3-TotalTime.csv");
+            varyMuSimulateSpaguettiSeeEmptyExits(sceneryFourEntryDistribution, 0.9, "5dot3-SeeTime.csv");
         }
 
 

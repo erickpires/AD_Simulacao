@@ -3,6 +3,9 @@ import java.io.PrintStream;
 
 /**
  * Created by Vítor on 17/08/2015.Watch out for my copypaste errors
+ *
+ *
+ * Not going to be used anymore. Check Sampler for question 4's main
  */
 public class MainFor4 {
 

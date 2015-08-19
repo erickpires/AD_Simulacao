@@ -61,7 +61,7 @@ public class Gym {
 
     }
 
-    private Metrics run() {
+    public Metrics run() {
 
         double areaBike = 0;
         double areaTreadmill = 0;
@@ -212,6 +212,16 @@ public class Gym {
     return new Metrics(meanNumberOfClientsBike,meanNumberOfClientsTreadmill,meanWaitingTime );
 
     }
+
+
+
+
+
+
+
+
+
+
 
 
 }
