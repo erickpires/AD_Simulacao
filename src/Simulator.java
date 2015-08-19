@@ -317,7 +317,7 @@ public class Simulator {
         while (!events.isEmpty()) {
             Event currentEvent = events.remove(0);
 
-            if(currentEvent.getTime()>TIME_LIMIT) {
+            if (currentEvent.getTime() > TIME_LIMIT) {
                 break;
             }
 
@@ -328,7 +328,7 @@ public class Simulator {
 
                     lifetimeClients++;
 
-                    if(numberOfClients == 0) {
+                    if (numberOfClients == 0) {
 
                         seeEmpty++;
                     }
@@ -340,7 +340,7 @@ public class Simulator {
                     Event newEntryEvent = new Event(newEntryTime, Event.EventType.entry);
                     addEvent(newEntryEvent);
 
-                    if(numberOfClients == 1) {
+                    if (numberOfClients == 1) {
 
                         double newExitTime = currentEvent.getTime() + exitDistribution.nextNumber();
                         Event newExitEvent = new Event(newExitTime, Event.EventType.exit);
@@ -352,11 +352,11 @@ public class Simulator {
 
                 case exit:
 
-                    if(!(random.nextDouble() < reentryProbability)) {
+                    if (!(random.nextDouble() < reentryProbability)) {
                         numberOfClients--;
                     }
 
-                    if(numberOfClients>0) {
+                    if (numberOfClients > 0) {
 
                         double newExitTime = currentEvent.getTime() + exitDistribution.nextNumber();
                         Event newExitEvent = new Event(newExitTime, Event.EventType.exit);
@@ -372,11 +372,14 @@ public class Simulator {
                 emptyStart = currentEvent.getTime();
                 wasItEmptyLastTime = 1;
             }
-            else if(wasItEmptyLastTime == 1){
-                  emptyTotalTime+= emptyStart + currentEvent.getTime();
-                  emptyStart = 0;
-                  wasItEmptyLastTime = 0;
+            else
+                if (wasItEmptyLastTime == 1) {
+                emptyTotalTime += emptyStart + currentEvent.getTime();
+                emptyStart = 0;
+                wasItEmptyLastTime = 0;
                 }
+
+
 
 
             area += lastNumberOfClients*(currentEvent.getTime()-lastEventTime);
@@ -387,6 +390,8 @@ public class Simulator {
         }
 
         double emptyRelativeTime = emptyTotalTime/lastEventTime;
+
+        System.out.println("emptyRelativeTime = "+ emptyRelativeTime + "\nemptyTotalTime = " + emptyTotalTime + "\nlastEventTime = " + lastEventTime);
 
  //       System.out.println("The time the system spent empty was " + emptyRelativeTime + "of the total time");
 

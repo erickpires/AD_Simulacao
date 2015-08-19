@@ -22,6 +22,9 @@ public class Gym {
 
     private Distribution arrivalsDistribution;
 
+
+    private double lambda;
+
     private int numberOfClientsBike;
 
     private int numberOfClientsTreadmill;
@@ -30,12 +33,13 @@ public class Gym {
     private Random random = new Random(System.currentTimeMillis());
 
 
-    public Gym(double reentryIntoBike, double reentryIntoTreadmill, Distribution serviceTreadmillDistribution, Distribution serviceBikeDistribution, Distribution arrivalsDistribution) {
+    public Gym(double reentryIntoBike, double reentryIntoTreadmill, Distribution serviceTreadmillDistribution, Distribution serviceBikeDistribution, Distribution arrivalsDistribution, double lambda) {
         this.reentryIntoBike = reentryIntoBike;
         this.reentryIntoTreadmill = reentryIntoTreadmill;
         this.serviceBikeDistribution = serviceBikeDistribution;
         this.arrivalsDistribution = arrivalsDistribution;
         this.serviceTreadmillDistribution = serviceTreadmillDistribution;
+        this.lambda = lambda;
 
         init();
     }
@@ -57,7 +61,18 @@ public class Gym {
 
     }
 
-    private double run() {
+    private Metrics run() {
+
+        double areaBike = 0;
+        double areaTreadmill = 0;
+        double lastEventTimeBike = 0;
+        double lastEventTimeTreadmill = 0;
+        double lastNumberOfClientsBike = 0;
+        double lastNumberOfClientsTreadmill = 0;
+
+
+
+
 
         while(!events.isEmpty()) {
 
@@ -100,7 +115,7 @@ public class Gym {
 
                     numberOfClientsTreadmill--;
 
-                    if(numberOfClientsTreadmill>0) {
+                    if(numberOfClientsTreadmill > 0) {
 
                         double newExitTime = currentEvent.getTime() + serviceTreadmillDistribution.nextNumber();
                         EventG newExitEvent = new EventG(newExitTime, EventG.EventType.treadmillExit);
@@ -133,7 +148,7 @@ public class Gym {
 
                     numberOfClientsBike--;
 
-                    if(numberOfClientsBike>0) {
+                    if(numberOfClientsBike > 0) {
 
                         double newExitTime = currentEvent.getTime() + serviceBikeDistribution.nextNumber();
                         EventG newExitEvent = new EventG(newExitTime, EventG.EventType.bikeExit);
@@ -145,9 +160,23 @@ public class Gym {
 
             }
 
+            switch (currentEvent.getMachine()) {
 
+                case bike:
 
+                    areaBike += lastNumberOfClientsBike*(currentEvent.getTime()-lastEventTimeBike);
+                    lastEventTimeBike = currentEvent.getTime();
+                    lastNumberOfClientsBike = numberOfClientsBike;
 
+                    break;
+
+                case treadmill:
+
+                    areaTreadmill += lastNumberOfClientsTreadmill*(currentEvent.getTime()-lastEventTimeTreadmill);
+                    lastEventTimeTreadmill = currentEvent.getTime();
+                    lastNumberOfClientsTreadmill = numberOfClientsTreadmill;
+
+            }
 
 
 
@@ -155,17 +184,34 @@ public class Gym {
         }
 
 
+        /*
+
+        Time for some theory. According to Sadoc's email
+
+        'E[N] = E[Ne] + E[Nb] and then you apply Little's'
+
+        and Little is
+
+        L = lambda * W , where
+        L = Average number of items in the queuing system ( E[N] i think )
+        lambda = average number of items arriving per unit time
+        W= average waiting time in the system ( our answer )
+
+        */
 
 
-    return 0;
+
+
+// Metrics(int meanBikeUsage, int meanTreadmillUsage, double meanTimeInGym)
+
+        double meanNumberOfClientsBike = areaBike/lastEventTimeBike;
+        double meanNumberOfClientsTreadmill = areaTreadmill/lastEventTimeTreadmill;
+        double meanNumberOfClientsTotal = meanNumberOfClientsBike + meanNumberOfClientsTreadmill;
+        double meanWaitingTime = meanNumberOfClientsTotal / lambda;
+
+    return new Metrics(meanNumberOfClientsBike,meanNumberOfClientsTreadmill,meanWaitingTime );
 
     }
-
-
-
-
-
-
 
 
 }
