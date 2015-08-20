@@ -10,7 +10,9 @@ import java.util.Random;
  */
 public class Simulator {
     private static final double TIME_LIMIT = 10000;
+    //Just for 4.4, let's turn up the heat
 
+    //private static final double TIME_LIMIT = 100000;
     private double reentryProbability;
 
     private Distribution entryDistribution;
@@ -20,6 +22,7 @@ public class Simulator {
 
     private List<Event> events  = new ArrayList<Event>();
     private List<EventR> eventsR  = new ArrayList<EventR>();
+    private List<Double> answer = new ArrayList<Double>();
     private Random random = new Random(System.currentTimeMillis());
 
     public Simulator(Distribution entryDistribution, Distribution exitDistribution, double reentryProbability) {
@@ -101,13 +104,14 @@ public class Simulator {
         return meanNumberOfClients;
     }
 
-    public void samplesExitTime(){
+    public void samplesExitTime(String name){
         try {
-            PrintStream out = new PrintStream(new FileOutputStream("samplesExitTime.csv"));
+            PrintStream out = new PrintStream(new FileOutputStream(name));
             double lastNumberOfClients = 0;
             double lastEventExitTime = 0;
             double timeSinceLastExit = 0;
-          //  List<double> answer;
+            answer = new ArrayList<Double>();
+
 
         while (!events.isEmpty()) {
             Event currentEvent = events.remove(0);
@@ -139,7 +143,11 @@ public class Simulator {
 
                     timeSinceLastExit = currentEvent.getTime() - lastEventExitTime;
 
-                    out.print(timeSinceLastExit + ",\n");
+                    answer.add(timeSinceLastExit);
+
+                    //addAndSort(timeSinceLastExit);
+
+                    //out.print(timeSinceLastExit + ",\n");
 
 
                     if(!(random.nextDouble() < reentryProbability)) {
@@ -159,18 +167,40 @@ public class Simulator {
             }
 
         }
+            Collections.sort(answer);
+            double steps = 1.0 / answer.size();
+            int index = 0;
+            double axisX = 0;
+
+            while (!answer.isEmpty()) {
+
+                axisX = steps * index;
+
+                out.print(axisX + ",");
+
+
+                double current;
+
+                current = answer.remove(0);
+                out.print(current + "\n");
+
+                index++;
+            }
+
+            out.close();
 
 
         }catch (Exception ignored) {}
     }
 
-    public void samplesExogenExits(){
+    public void samplesExogenExits(String name){
         try {
-            PrintStream out = new PrintStream(new FileOutputStream("samplesExogenExits.csv"));
+            PrintStream out = new PrintStream(new FileOutputStream(name));
             double lastNumberOfClients = 0;
             double lastEventTime = 0;
             double lastEventExitTime = 0;
             double timeSinceLastExit = 0;
+            answer = new ArrayList<Double>();
 
             while (!events.isEmpty()) {
                 Event currentEvent = events.remove(0);
@@ -205,7 +235,10 @@ public class Simulator {
                             numberOfClients--;
 
                             timeSinceLastExit = currentEvent.getTime() - lastEventExitTime;
-                            out.print(timeSinceLastExit + ",\n");
+
+
+                            answer.add(timeSinceLastExit);
+                            //addAndSort(timeSinceLastExit);
 
                             lastEventExitTime = currentEvent.getTime();
                         }
@@ -223,16 +256,38 @@ public class Simulator {
             }
 
 
+            Collections.sort(answer);
+            double steps = 1.0 / answer.size();
+            int index = 0;
+            double axisX = 0;
+
+            while (!answer.isEmpty()) {
+
+                axisX = steps * index;
+
+                out.print(axisX + ",");
+
+
+                double current;
+
+                current = answer.remove(0);
+                out.print(current + "\n");
+
+                index++;
+            }
+
+            out.close();
+
+
         }catch (Exception ignored) {}
     }
 
-    public void sampleEntryTime() {// 4.4
+    public void sampleEntryTime(String name) {// 4.4
         try {
-            PrintStream out = new PrintStream(new FileOutputStream("samplesEntryTime.csv"));
-            double lastNumberOfClients = 0;
+            PrintStream out = new PrintStream(new FileOutputStream(name));
             double lastEntryEventTime = 0;
-            double thisExistsToUseDistribution2Times = 0;
             double timeSinceLastEntry = 0;
+            answer = new ArrayList<Double>();
 
             while (!eventsR.isEmpty()) {
                 EventR currentEvent = eventsR.remove(0);
@@ -251,7 +306,10 @@ public class Simulator {
 
                         timeSinceLastEntry = currentEvent.getTime() - lastEntryEventTime;
 
-                        out.print(timeSinceLastEntry + ",\n");
+                        answer.add(timeSinceLastEntry);
+
+                        //addAndSort(timeSinceLastEntry);
+                        //out.print(timeSinceLastEntry + ",\n");
 
                         double newEntryTime = currentEvent.getTime() + entryDistribution.nextNumber();
                         EventR newEntryEvent = new EventR(newEntryTime, EventR.EventType.entry);
@@ -295,7 +353,10 @@ public class Simulator {
 
                         timeSinceLastEntry = currentEvent.getTime() - lastEntryEventTime;
 
-                        out.print(timeSinceLastEntry + ",zn");
+                        answer.add(timeSinceLastEntry);
+                        //addAndSort(timeSinceLastEntry);
+
+                        //out.print(timeSinceLastEntry + ",zn");
 
                         if(numberOfClients == 1) {
 
@@ -315,6 +376,28 @@ public class Simulator {
 
             }
 
+            Collections.sort(answer);
+
+            double steps = 1.0 / answer.size();
+            int index = 0;
+            double axisX = 0;
+
+            while (!answer.isEmpty()) {
+
+                axisX = steps * index;
+
+                out.print(axisX + ",");
+
+
+                double current;
+
+                current = answer.remove(0);
+                out.print(current + "\n");
+
+                index++;
+            }
+
+            out.close();
 
         }catch (Exception ignored) {}
     }
@@ -908,9 +991,6 @@ public class Simulator {
         Collections.sort(eventsR);
     }
 
-//    private void addAndSort(double answer, List){
-//
-//
-//    }
+
 
 }

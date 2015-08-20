@@ -11,19 +11,42 @@ public class MainFor5 {
 
         public static void main(String[] args) {
 
-            System.out.println("5.1\n");
-            varyLambdaSimulateSpaguettiTimeEmpty(Distribution.DistributionType.exponential, 0.0, 1.0, "5dot1-TotalTime.csv");
-            varyLambdaSimulateSpaguettiSeeEmpty(Distribution.DistributionType.exponential, 0.0, 1.0, "5dot1-SeeTime.csv");
+//            System.out.println("5.1\n");
+//            varyLambdaSimulateSpaguettiTimeEmpty(Distribution.DistributionType.exponential, 0.0, 1.0, "5dot1-TotalTime.csv");
+//            varyLambdaSimulateSpaguettiSeeEmpty(Distribution.DistributionType.exponential, 0.0, 1.0, "5dot1-SeeTime.csv");
+//
+//            System.out.println("5.2\n");
+//            Distribution sceneryFourEntryDistribution = new ExpDistribution(0.01);
+//            varyMuSimulateSpaguettiTimeEmpty(sceneryFourEntryDistribution, 0.9, "5dot2-TotalTime.csv");
+//            varyMuSimulateSpaguettiSeeEmpty(sceneryFourEntryDistribution, 0.9, "5dot2-SeeTime.csv");
+//
+//            System.out.println("5.3\n");
+//            sceneryFourEntryDistribution = new ExpDistribution(0.01);
+//            varyMuSimulateSpaguettiTimeEmptyExits(sceneryFourEntryDistribution, 0.9, "5dot3-TotalTime.csv");
+//            varyMuSimulateSpaguettiSeeEmptyExits(sceneryFourEntryDistribution, 0.9, "5dot3-SeeTime.csv");
 
-            System.out.println("5.2\n");
-            Distribution sceneryFourEntryDistribution = new ExpDistribution(0.01);
-            varyMuSimulateSpaguettiTimeEmpty(sceneryFourEntryDistribution, 0.9, "5dot2-TotalTime.csv");
-            varyMuSimulateSpaguettiSeeEmpty(sceneryFourEntryDistribution, 0.9, "5dot2-SeeTime.csv");
+            System.out.println("Other Scenarios");
 
-            System.out.println("5.3\n");
-            sceneryFourEntryDistribution = new ExpDistribution(0.01);
-            varyMuSimulateSpaguettiTimeEmptyExits(sceneryFourEntryDistribution, 0.9, "5dot3-TotalTime.csv");
-            varyMuSimulateSpaguettiSeeEmptyExits(sceneryFourEntryDistribution, 0.9, "5dot3-SeeTime.csv");
+            varyLambdaSimulateSpaguettiTimeEmpty(Distribution.DistributionType.deterministic, 0.0, 1.0, "5scenario2-Total.csv");
+            varyLambdaSimulateSpaguettiSeeEmpty(Distribution.DistributionType.deterministic, 0.0, 1.0, "5scenario2-See.csv");
+
+            Distribution sceneryThreeEntryDistribution = new UniformDistribution(5.0, 15.0);
+
+            varyMuSimulateSpaguettiTimeEmpty(sceneryThreeEntryDistribution, 0.0, "5scenario3-Total.csv");
+            varyMuSimulateSpaguettiSeeEmpty(sceneryThreeEntryDistribution, 0.0, "5scenario3-See.csv");
+
+            Distribution sceneryFiveEntryDistribution = new DeterministicDistribution(0.01);
+
+            varyMuSimulateSpaguettiTimeEmpty(sceneryFiveEntryDistribution, 0.9, "5scenario5-Total.csv");
+            varyMuSimulateSpaguettiSeeEmpty(sceneryFiveEntryDistribution, 0.9, "5scenario5-See.csv");
+
+            Distribution scenerySixEntryDistribution = new UniformDistribution(50.0, 150.0);
+
+            varyMuSimulateSpaguettiTimeEmpty(scenerySixEntryDistribution, 0.9, "5scenario6-Total.csv");
+            varyMuSimulateSpaguettiSeeEmpty(scenerySixEntryDistribution, 0.9, "5scenario6-See.csv");
+
+
+
         }
 
 
