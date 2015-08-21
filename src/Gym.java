@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Created by Vítor on 18/08/2015.
+ * Created by Vï¿½tor on 18/08/2015.
  */
 
 
@@ -77,7 +77,7 @@ public class Gym {
 
     }
 
-    public Metrics run() { // TODO fix reentries
+    public Metrics run() {
 
         double areaBike = 0;
         double areaTreadmill = 0;
@@ -92,7 +92,7 @@ public class Gym {
 
         while(!events.isEmpty()) {
 
-            EventG currentEvent = events.remove(0);
+            EventGR currentEvent = eventsGR.remove(0);
 
             if(currentEvent.getTime()>TIME_LIMIT) {
                 break;
@@ -105,15 +105,29 @@ public class Gym {
                     numberOfClientsTreadmill++;
 
                     double newEntryTime = currentEvent.getTime() + arrivalsDistribution.nextNumber();
-                    EventG newEntryEvent = new EventG(newEntryTime, EventG.EventType.treadmillEntry);
-                    addEventG(newEntryEvent);
+                    EventGR newEntryEvent = new EventGR(newEntryTime, EventGR.EventType.treadmillEntry);
+                    addEventGR(newEntryEvent);
 
 
                     if(numberOfClientsTreadmill == 1) {
 
                         double newExitTime = currentEvent.getTime() + serviceTreadmillDistribution.nextNumber();
-                        EventG newExitEvent = new EventG(newExitTime, EventG.EventType.treadmillExit);
-                        addEventG(newExitEvent);
+                        EventGR newExitEvent = new EventGR(newExitTime, EventGR.EventType.treadmillExit);
+                        addEventGR(newExitEvent);
+
+                    }
+
+                    break;
+
+                case treadmillReentry:
+
+                    numberOfClientsTreadmill++;
+
+                    if(numberOfClientsTreadmill == 1) {
+
+                        double newExitTime = currentEvent.getTime() + serviceTreadmillDistribution.nextNumber();
+                        EventGR newExitEvent = new EventGR(newExitTime, EventGR.EventType.treadmillExit);
+                        addEventGR(newExitEvent);
 
                     }
 
@@ -123,8 +137,8 @@ public class Gym {
 
                     if (random.nextDouble() < reentryIntoBike) {
 
-                        EventG instant = new EventG(currentEvent.getTime(), EventG.EventType.bikeEntry);
-                        addEventG(instant);
+                        EventGR instant = new EventGR(currentEvent.getTime(), EventGR.EventType.bikeEntry);
+                        addEventGR(instant);
 
 
                     }
@@ -134,8 +148,8 @@ public class Gym {
                     if(numberOfClientsTreadmill > 0) {
 
                         double newExitTime = currentEvent.getTime() + serviceTreadmillDistribution.nextNumber();
-                        EventG newExitEvent = new EventG(newExitTime, EventG.EventType.treadmillExit);
-                        addEventG(newExitEvent);
+                        EventGR newExitEvent = new EventGR(newExitTime, EventGR.EventType.treadmillExit);
+                        addEventGR(newExitEvent);
 
                     }
                     break;
@@ -147,8 +161,8 @@ public class Gym {
                     if(numberOfClientsTreadmill == 1) {
 
                         double newExitTime = currentEvent.getTime() + serviceTreadmillDistribution.nextNumber();
-                        EventG newExitEvent = new EventG(newExitTime, EventG.EventType.treadmillExit);
-                        addEventG(newExitEvent);
+                        EventGR newExitEvent = new EventGR(newExitTime, EventGR.EventType.bikeExit);
+                        addEventGR(newExitEvent);
 
                     }
 
@@ -158,8 +172,8 @@ public class Gym {
 
                     if (random.nextDouble() < reentryIntoTreadmill) {
 
-                        EventG instant = new EventG(currentEvent.getTime(), EventG.EventType.treadmillEntry);
-                        addEventG(instant);
+                        EventGR instant = new EventGR(currentEvent.getTime(), EventGR.EventType.treadmillReentry);
+                        addEventGR(instant);
                     }
 
                     numberOfClientsBike--;
@@ -167,11 +181,12 @@ public class Gym {
                     if(numberOfClientsBike > 0) {
 
                         double newExitTime = currentEvent.getTime() + serviceBikeDistribution.nextNumber();
-                        EventG newExitEvent = new EventG(newExitTime, EventG.EventType.bikeExit);
-                        addEventG(newExitEvent);
+                        EventGR newExitEvent = new EventGR(newExitTime, EventGR.EventType.bikeExit);
+                        addEventGR(newExitEvent);
 
                     }
                     break;
+
 
 
             }
@@ -325,7 +340,7 @@ public class Gym {
                     if(numberOfClientsTreadmill == 1) {
 
                         double newExitTime = currentEvent.getTime() + serviceTreadmillDistribution.nextNumber();
-                        EventGR newExitEvent = new EventGR(newExitTime, EventGR.EventType.treadmillExit);
+                        EventGR newExitEvent = new EventGR(newExitTime, EventGR.EventType.bikeExit);
                         addEventGR(newExitEvent);
 
                     }
@@ -395,6 +410,8 @@ public class Gym {
             double axisX = 0;
 
             while (!answer.isEmpty()) {
+
+
 
                 axisX = steps * index;
 
@@ -518,7 +535,7 @@ public class Gym {
                     if(numberOfClientsTreadmill == 1) {
 
                         double newExitTime = currentEvent.getTime() + serviceTreadmillDistribution.nextNumber();
-                        EventGR newExitEvent = new EventGR(newExitTime, EventGR.EventType.treadmillExit);
+                        EventGR newExitEvent = new EventGR(newExitTime, EventGR.EventType.bikeExit);
                         addEventGR(newExitEvent);
 
                     }
@@ -707,7 +724,7 @@ public class Gym {
                     if(numberOfClientsTreadmill == 1) {
 
                         double newExitTime = currentEvent.getTime() + serviceTreadmillDistribution.nextNumber();
-                        EventGR newExitEvent = new EventGR(newExitTime, EventGR.EventType.treadmillExit);
+                        EventGR newExitEvent = new EventGR(newExitTime, EventGR.EventType.bikeExit);
                         addEventGR(newExitEvent);
 
                     }
@@ -812,6 +829,8 @@ public class Gym {
 
         double lastEventExitTime = 0;
         double timeSinceLastExit = 0;
+        numberOfClientsTreadmill = 0;
+        numberOfClientsBike = 0;
 
 
 
@@ -823,9 +842,12 @@ public class Gym {
                 break;
             }
 
+//           System.out.println("Type = " + currentEvent.getType() + " , Time = " + currentEvent.getTime());
+
             switch (currentEvent.getType()) {
 
                 case treadmillEntry:
+
 
                     numberOfClientsTreadmill++;
 
@@ -872,6 +894,8 @@ public class Gym {
                     else{
                         timeSinceLastExit = currentEvent.getTime() - lastEventExitTime;
 
+ //                       System.out.println("timeSinceLastExit = " + timeSinceLastExit);
+
                         answer.add(timeSinceLastExit);
 
                         lastEventExitTime = currentEvent.getTime();
@@ -893,18 +917,26 @@ public class Gym {
 
                     numberOfClientsBike++;
 
+
                     if(numberOfClientsTreadmill == 1) {
 
-                        double newExitTime = currentEvent.getTime() + serviceTreadmillDistribution.nextNumber();
-                        EventGR newExitEvent = new EventGR(newExitTime, EventGR.EventType.treadmillExit);
+
+//                        System.out.println("numberOfClientsBike here should be 0 but it is = " + numberOfClientsBike +"\n" );
+
+                        double newExitTime = currentEvent.getTime() - 0.5;
+                        EventGR newExitEvent = new EventGR(newExitTime, EventGR.EventType.bikeExit);
                         addEventGR(newExitEvent);
 
                     }
+
+//                    System.out.println("numberOfClientsBike right after the increase = " + numberOfClientsBike +"\n" );
 
                     break;
 
 
                 case bikeExit:
+
+//                    System.out.println("got into bike exit\n");
 
                     if (random.nextDouble() < reentryIntoTreadmill) {
 
@@ -967,6 +999,7 @@ public class Gym {
 
             while (!answer.isEmpty()) {
 
+
                 axisX = steps * index;
 
                 out.print(axisX + ",");
@@ -976,6 +1009,8 @@ public class Gym {
 
                 current = answer.remove(0);
                 out.print(current + "\n");
+
+//                System.out.println("index = " + index + "\ncurrent = " + current);
 
                 index++;
             }
@@ -990,13 +1025,7 @@ public class Gym {
     }
 
     public void sampleBikeQuit(String name) {
-
-        double areaBike = 0;
-        double areaTreadmill = 0;
-        double lastEventTimeBike = 0;
-        double lastEventTimeTreadmill = 0;
-        double lastNumberOfClientsBike = 0;
-        double lastNumberOfClientsTreadmill = 0;
+        ;
         answer = new ArrayList<Double>();
 
         double lastEventExitTime = 0;
@@ -1078,7 +1107,7 @@ public class Gym {
                     if(numberOfClientsTreadmill == 1) {
 
                         double newExitTime = currentEvent.getTime() + serviceTreadmillDistribution.nextNumber();
-                        EventGR newExitEvent = new EventGR(newExitTime, EventGR.EventType.treadmillExit);
+                        EventGR newExitEvent = new EventGR(newExitTime, EventGR.EventType.bikeExit);
                         addEventGR(newExitEvent);
 
                     }
@@ -1120,23 +1149,6 @@ public class Gym {
 
             }
 
-            switch (currentEvent.getMachine()) {
-
-                case bike:
-
-                    areaBike += lastNumberOfClientsBike*(currentEvent.getTime()-lastEventTimeBike);
-                    lastEventTimeBike = currentEvent.getTime();
-                    lastNumberOfClientsBike = numberOfClientsBike;
-
-                    break;
-
-                case treadmill:
-
-                    areaTreadmill += lastNumberOfClientsTreadmill*(currentEvent.getTime()-lastEventTimeTreadmill);
-                    lastEventTimeTreadmill = currentEvent.getTime();
-                    lastNumberOfClientsTreadmill = numberOfClientsTreadmill;
-
-            }
 
 
 
@@ -1279,7 +1291,7 @@ public class Gym {
                     if(numberOfClientsTreadmill == 1) {
 
                         double newExitTime = currentEvent.getTime() + serviceTreadmillDistribution.nextNumber();
-                        EventGR newExitEvent = new EventGR(newExitTime, EventGR.EventType.treadmillExit);
+                        EventGR newExitEvent = new EventGR(newExitTime, EventGR.EventType.bikeExit);
                         addEventGR(newExitEvent);
 
                     }
@@ -1461,7 +1473,7 @@ public class Gym {
                     if(numberOfClientsTreadmill == 1) {
 
                         double newExitTime = currentEvent.getTime() + serviceTreadmillDistribution.nextNumber();
-                        EventGR newExitEvent = new EventGR(newExitTime, EventGR.EventType.treadmillExit);
+                        EventGR newExitEvent = new EventGR(newExitTime, EventGR.EventType.bikeExit);
                         addEventGR(newExitEvent);
 
                     }
