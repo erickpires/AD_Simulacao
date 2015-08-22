@@ -1,0 +1,27 @@
+Case 1
+
+	Treadmill Chain
+
+		Number of states = 4;
+		Mean number of clients waiting = 0.2435897;
+
+	Bike Chain
+	
+		Number of states = 4;
+		Mean number of clients waiting  = 0.2435897;
+
+
+Case 2
+
+	Treadmill Chain
+
+		Number of states = 20;
+		Mean number of clients waiting = 0.1234568;
+
+	Bike Chain
+	
+		Number of states = 20;
+		Mean number of clients waiting  = 0.0111111;
+
+
+	
