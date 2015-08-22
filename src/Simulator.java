@@ -402,7 +402,6 @@ public class Simulator {
         }catch (Exception ignored) {}
     }
 
-
     public double meanTotalExitTime() { // For 4.1 and 4.3
         double area = 0;
         double lastNumberOfClients = 0;
@@ -796,6 +795,7 @@ public class Simulator {
         return relativeSeeEmpty;
 
     }
+
     public double spaghettiTotalTimeExits() {// For 5.3
         double area = 0;
         double lastNumberOfClients = 0;

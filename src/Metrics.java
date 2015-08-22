@@ -34,7 +34,7 @@ public class Metrics {
     public double meanTreadmillUsage;
     public double meanTimeInGym;
 
-    public Metrics(double meanBikeUsage, double meanTreadmillUsage, double meanTimeInGym) {
+    public Metrics( double meanTreadmillUsage, double meanBikeUsage, double meanTimeInGym) {
         this.meanBikeUsage = meanBikeUsage;
         this.meanTreadmillUsage = meanTreadmillUsage;
         this.meanTimeInGym = meanTimeInGym;
