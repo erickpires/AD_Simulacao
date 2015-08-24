@@ -1,9 +1,8 @@
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 
 /**
- * Created by Vítor on 20/08/2015.
+ * Created by Vï¿½tor on 20/08/2015.
  */
 public class Mainfor6 {
 
@@ -18,9 +17,9 @@ public class Mainfor6 {
 
         System.out.println("6.1");
 
-//        simulate(1.0, 0.9, new ExpDistribution(5.0), new ExpDistribution(5.0), new ExpDistribution(0.1), 0.1, "6dot1scenario1.txt");
+        simulate(1.0, 0.9, new ExpDistribution(5.0), new ExpDistribution(5.0), new ExpDistribution(0.1), 0.1, "6dot1scenario1.txt");
 
-        simulate(0.1, 0.9, new ExpDistribution(1.0), new ExpDistribution(1.0), new ExpDistribution(0.1), 0.1, "6dot1scenario2.txt");
+//        simulate(0.1, 0.9, new ExpDistribution(1.0), new ExpDistribution(1.0), new ExpDistribution(0.1), 0.1, "6dot1scenario2.txt");
 
 //        simulate(0.9, 0.9, new ExpDistribution(1.0), new ExpDistribution(1.0), new ExpDistribution(10.0), 10.0, "6dot1scenario3.txt");
 

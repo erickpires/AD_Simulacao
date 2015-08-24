@@ -1,5 +1,3 @@
-import com.sun.org.apache.xpath.internal.SourceTree;
-
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -353,9 +351,9 @@ public class Gym {
 
                     numberOfClientsBike++;
 
-                    if(numberOfClientsTreadmill == 1) {
+                    if(numberOfClientsBike == 1) {
 
-                        double newExitTime = currentEvent.getTime() + serviceTreadmillDistribution.nextNumber();
+                        double newExitTime = currentEvent.getTime() + serviceBikeDistribution.nextNumber();
                         EventGR newExitEvent = new EventGR(newExitTime, EventGR.EventType.bikeExit);
                         addEventGR(newExitEvent);
 
